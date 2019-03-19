@@ -25,47 +25,55 @@ var questionList = [{
 $(document).ready(function () {
 
     console.log("$(document) is ready");
-    $(".game-div").on('click', 'button', handleStartButton);
+    $(".start-div").on('click', 'button', onStartButtonClick);
+    $(".game-div").on('click', '.game-answer', onGameAnswerClick);
     showStartButton();
 
 });
 
-function handleStartButton(event) {
+function onStartButtonClick() {
 
-    console.log("handleStartButton called")
-    startNewGame()
-}
+    console.log("onStartButtonClick called");
+    startNewGame();
+};
+
+function onGameAnswerClick() {
+    
+    console.log("onGameAnswerClick called")
+    var $thisAnswer = $(this);
+    // console.log("This is", $thisAnswer );
+    var isCorrect = $thisAnswer.attr("data-correct");
+    if (isCorrect == "true") {
+        console.log("Your are Correct!")
+        $thisAnswer.css('background-color', 'green');
+        $thisAnswer.css("color", "white")
+    } else {
+        console.log ("you are wrong :( ")
+        $thisAnswer.css('background-color', 'red');
+        $thisAnswer.css("color", "white")
+   };
+
+};
 
 function startNewGame() {
 
     console.log("startNewGame called")
 
-    // $('.question').html(questions[counter].question);
-    // var showingAnswers =
-    //   '<p class="answer first-answer">' +
-    //   questions[counter].answers[0].answer +
-    //   '</p><p class="answer">' +
-    //   questions[counter].answers[1].answer +
-    //   '</p><p class="answer">' +
-    //   questions[counter].answers[2].answer +
-    //   '</p><p class="answer">' +
-    //   questions[counter].answers[3].answer +
-    //   '</p>';
     var $startDiv = $(".start-div");
       var $gameDiv = $(".game-div");
 
       var htmlText = "";
       htmlText += '<div class="row">';
-      htmlText += '   <div class="col-12-sm">';
+      htmlText += '   <div class="col col-12-sm text-center">';
       htmlText += '       <p class="game-question">' + questionList[i].question + '</p>';
-      htmlText += '       <a class="game-answer">' + questionList[i].answerList[0].answer + '</a><br>';
-      htmlText += '       <a class="game-answer">' + questionList[i].answerList[1].answer + '</a><br>';
-      htmlText += '       <a class="game-answer">' + questionList[i].answerList[2].answer + '</a><br>';
-      htmlText += '       <a class="game-answer">' + questionList[i].answerList[3].answer + '</a><br>';
+      htmlText += '       <a class="game-answer" data-correct="' + questionList[i].answerList[0].isCorrect + '">' + questionList[i].answerList[0].answer + '</a><br>';
+      htmlText += '       <a class="game-answer" data-correct="' + questionList[i].answerList[1].isCorrect + '">' + questionList[i].answerList[1].answer + '</a><br>';
+      htmlText += '       <a class="game-answer" data-correct="' + questionList[i].answerList[2].isCorrect + '">' + questionList[i].answerList[2].answer + '</a><br>';
+      htmlText += '       <a class="game-answer" data-correct="' + questionList[i].answerList[3].isCorrect + '">' + questionList[i].answerList[3].answer + '</a><br>';
       htmlText += '   </div>';
       htmlText += '</div>';
 
-      console.log("htmlText is",htmlText )
+    //   console.log("htmlText is",htmlText )   questionList[i].answerList[1].isCorrect
 
       $gameDiv.empty();
       $gameDiv.html(htmlText);
@@ -78,13 +86,17 @@ function startNewGame() {
 
 function showStartButton() {
 
-    console.log("showStartButton was called")
-    var $gameDiv = $(".game-div")
+    console.log("showStartButton was called");
+    var $startDiv = $(".start-div");
+    var $gameDiv = $(".game-div");
     var htmlText = "";
     htmlText += '<div class="row">';
-    htmlText += '   <div class="col-12-sm">';
+    htmlText += '   <div class="col col-12-sm text-center">';
+    // htmlText += '    <div class="text-center">';
     htmlText += '       <button id="start-button">Start</button>';
+    // htmlText += '    </div>';
     htmlText += '   </div>';
     htmlText += '</div>';
-    $gameDiv.html(htmlText)
+    $gameDiv.html("")
+    $startDiv.html(htmlText);
 }
