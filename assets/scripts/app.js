@@ -1,5 +1,5 @@
 
-var i = 0; // index for questionList array
+var nextQuestion = 0; // index for questionList array
 var timeLimit = 15
 var clockInterval ;
 var timeLeft = timeLimit; 
@@ -8,7 +8,7 @@ var questionList = [{
         question: 'What was the first full length CGI movie?',
         answerList: [{
                 answer: "A Bug's Life",
-                isCorrect: true
+                isCorrect: false 
             },
             {
                 answer: "Monsters Inc.",
@@ -16,7 +16,7 @@ var questionList = [{
             },
             {
                 answer: "Toy Story",
-                isCorrect: false
+                isCorrect: true
             },
             {
                 answer: "The Lion King",
@@ -24,6 +24,8 @@ var questionList = [{
             }
         ]
 }];
+
+
 
 $(document).ready(function () {
 
@@ -34,10 +36,17 @@ $(document).ready(function () {
 
 });
 
+//                          _ _      _     
+//       ___  _ __      ___| (_) ___| | __ 
+//      / _ \| '_ \    / __| | |/ __| |/ / 
+//     | (_) | | | |  | (__| | | (__|   <  
+//      \___/|_| |_|   \___|_|_|\___|_|\_\ 
+//                                         
+
 function onStartButtonClick() {
 
     console.log("onStartButtonClick called");
-    startNewGame();
+    showNextQuestion();
     startClock();
 };
 
@@ -49,23 +58,34 @@ function onGameAnswerClick() {
     var isCorrect = $thisAnswer.attr("data-correct");
     if (isCorrect == "true") {
         stopClock();
-        console.log("Your are Correct!")
+        console.log("answer was orrect")
         $thisAnswer.css('background-color', 'green');
         $thisAnswer.css("color", "white")
     } else {
-        console.log ("you are wrong :( ")
+        stopClock();
+        console.log ("answer was wrong :( ")
         $thisAnswer.css('background-color', 'red');
         $thisAnswer.css("color", "white")
+        showAnswerWasWrong()
    };
 
 };
 
-function startNewGame() {
 
-    console.log("startNewGame called")
+//       __                  _   _                  
+//      / _|_   _ _ __   ___| |_(_) ___  _ __  ___  
+//     | |_| | | | '_ \ / __| __| |/ _ \| '_ \/ __| 
+//     |  _| |_| | | | | (__| |_| | (_) | | | \__ \ 
+//     |_|  \__,_|_| |_|\___|\__|_|\___/|_| |_|___/ 
+//                                                  
+
+function showNextQuestion() {
+
+    console.log("showNextQuestion called")
 
     var $startDiv = $(".start-div");
     var $gameDiv = $(".game-div");
+    var i = nextQuestion;
 
     var htmlText = "";
     htmlText += '<div class="row">';
@@ -84,8 +104,8 @@ function startNewGame() {
       $gameDiv.html(htmlText);
       $startDiv.empty();
 
-      i = i + 1;
-      if (i>questionList.length-1) { I = 0}
+    //   i = i + 1;
+    //   if (i>questionList.length-1) { I = 0}
   
 }
 
@@ -97,21 +117,59 @@ function showStartButton() {
     var htmlText = "";
     htmlText += '<div class="row">';
     htmlText += '   <div class="col col-12-sm text-center">';
-    // htmlText += '    <div class="text-center">';
     htmlText += '       <button id="start-button">Start</button>';
-    // htmlText += '    </div>';
     htmlText += '   </div>';
     htmlText += '</div>';
     $gameDiv.html("")
     $startDiv.html(htmlText);
 }
 
+
+function showAnswerWasWrong() {
+
+    console.log("showAnswerWasWrong was called");
+    var q = nextQuestion;
+    var correctAnswer = 'Unknown";'
+
+    for (a=0; a < questionList[q].answerList.length; a=a+1) {
+        if (questionList[q].answerList[a].isCorrect == true ) {
+            correctAnswer = questionList[q].answerList[a].answer;
+        };
+    };
+
+    var $gameDiv = $(".game-div");
+    var htmlText = "";
+    htmlText += '<div class="row">';
+    htmlText += '   <div class="col col-12-sm text-center">';
+    htmlText += '       <p>Nope!</p>';
+    htmlText += '   </div>';
+    htmlText += '</div>';
+    htmlText += '<div class="row">';
+    htmlText += '   <div class="col col-12-sm text-center">';
+    htmlText += '       <p>The correct answer was ' + correctAnswer + '</p>';
+    htmlText += '   </div>';
+    htmlText += '</div>';
+    htmlText += '<div class="row">';
+    htmlText += '   <div class="col col-12-sm text-center">';
+    htmlText += '       <p></p>';
+    htmlText += '   </div>';
+    htmlText += '</div>';
+
+    $gameDiv.empty();
+    $gameDiv.html(htmlText);
+
+    // showNextQuestion() 
+    setTimeout("showNextQuestion(); startClock()", 4000);
+
+}
+
+
 function startClock() {
     clearInterval(clockInterval);
     timeLeft = timeLimit;
     var $clockDiv = $(".clock-div");
     console.log("clockDiv",$clockDiv);
-    $clockDiv.text( timeLeft.toString() );
+    $clockDiv.text( "Time remaining is " + timeLeft.toString() + " seconds");
     clockInterval = setInterval(clockCountDown, 1000);
 };
 
@@ -121,7 +179,7 @@ function clockCountDown() {
       clearInterval(clockInterval);
       alert("Time's Up!!!");
     } 
-    $('.clock-div').html(timeLeft.toString());
+    $('.clock-div').text( "Time remaining is " + timeLeft.toString() + " seconds");
     console.log("timeLeft", timeLeft)
   }
 
